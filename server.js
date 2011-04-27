@@ -13,6 +13,7 @@ var	rooms	= require('./lib/rooms.js');
 var	data	= require('./lib/data.js').db;
 
 var 	sanitizer = require('sanitizer');
+var 	mode = require('./config.js').mode;
 
 //Map of sids to user_names
 var sids_to_user_names = [];
@@ -37,9 +38,16 @@ app.configure( function(){
 });
 
 app.get('/', function(req, res) {
+  if("internal" == mode) {
+    db.getRooms(function(rooms) {
+      res.render('toc.jade',{ rooms: rooms });
+    });
+  }
+  else {
 	res.render('home.jade', {
 		 layout: false
 	});
+  }
 });
 
 app.get('/demo', function(req, res) {
